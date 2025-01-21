@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 // import './index.css'
 // import App from './App.jsx'
 import StarRating from "./StarRating";
+import EmojiStarRating from "./EmojiStarRating";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -13,5 +14,6 @@ createRoot(document.getElementById("root")).render(
       messages={["Terrible", "bad", "okay", "good", "Amazing"]}
       size={24}
     />
+    <EmojiStarRating />
   </StrictMode>
 );
