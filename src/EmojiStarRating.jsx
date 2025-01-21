@@ -2,6 +2,7 @@ import { useState } from "react";
 
 const EmojiStarRating = () => {
   const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
 
   const handleRate = (rating) => {
     setRating(rating);
@@ -20,25 +21,39 @@ const EmojiStarRating = () => {
           <Star
             key={i + 1}
             onRate={() => handleRate(i + 1)}
+            onHoverIn={() => setHoverRating(i + 1)}
+            onHoverOut={() => setHoverRating(0)}
             rating={rating}
+            hoverRating={hoverRating}
             index={i + 1}
           />
         ))}
       </div>
-      <p>{rating}</p>
+      <p>{hoverRating || rating || ""}</p>
     </div>
   );
 };
 
-const Star = ({ onRate, rating, index }) => {
+const Star = ({
+  onRate,
+  rating,
+  index,
+  onHoverIn,
+  onHoverOut,
+  hoverRating,
+}) => {
+  const isFilled = rating >= index || hoverRating >= index;
   return (
     <span
       onClick={onRate}
+      onMouseEnter={onHoverIn}
+      onMouseLeave={onHoverOut}
       style={{
-        color: index <= rating ? "yellow" : "gray",
+        color: isFilled ? "yellow" : "gray",
+        gap: "10px",
       }}
     >
-      🌟
+      Star
     </span>
   );
 };

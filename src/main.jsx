@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 // import App from './App.jsx'
 import StarRating from "./StarRating";
 import EmojiStarRating from "./EmojiStarRating";
+import TextExpander from "./TextExpander";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -15,5 +16,6 @@ createRoot(document.getElementById("root")).render(
       size={24}
     />
     <EmojiStarRating />
+    <TextExpander />
   </StrictMode>
 );
