@@ -202,10 +202,16 @@ export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
 
+  const fetchMovies = async () => {
+    const response = await fetch(
+      `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=batman`
+    );
+    const data = await response.json();
+    setMovies(data.Search);
+  };
+
   useEffect(() => {
-    fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=batman`)
-      .then((res) => res.json())
-      .then((data) => setMovies(data.Search));
+    fetchMovies();
   }, []);
 
   return (
