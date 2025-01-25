@@ -201,6 +201,7 @@ const Movie = ({ movie }) => {
 export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchMovies = async () => {
     const response = await fetch(
@@ -208,6 +209,7 @@ export default function App() {
     );
     const data = await response.json();
     setMovies(data.Search);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -222,7 +224,9 @@ export default function App() {
         <NumResults movies={movies} />
       </NavBar>
       <Main>
-        <Box element={<MoviesList movies={movies} />} />
+        <Box
+          element={isLoading ? <Loader /> : <MoviesList movies={movies} />}
+        />
 
         <Box
           element={
@@ -236,3 +240,7 @@ export default function App() {
     </>
   );
 }
+
+const Loader = () => {
+  return <p className="loader">Loading...</p>;
+};
