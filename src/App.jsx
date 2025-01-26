@@ -204,12 +204,20 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchMovies = async () => {
-    const response = await fetch(
-      `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=batman`
-    );
-    const data = await response.json();
-    setMovies(data.Search);
-    setIsLoading(false);
+    try {
+      const response = await fetch(
+        `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=batman`
+      );
+
+      if (!response.ok) {
+        throw new Error(`something went wrong fetching movies`);
+      }
+      const data = await response.json();
+      setMovies(data.Search);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   useEffect(() => {
