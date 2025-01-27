@@ -174,18 +174,22 @@ const Box = ({ element }) => {
     </div>
   );
 };
-const MoviesList = ({ movies }) => {
+const MoviesList = ({ movies, handleSelectMovie }) => {
   return (
-    <ul className="list">
+    <ul className="list list-movies">
       {movies?.map((movie) => (
-        <Movie movie={movie} key={movie.imdbID} />
+        <Movie
+          movie={movie}
+          key={movie.imdbID}
+          handleSelectMovie={handleSelectMovie}
+        />
       ))}
     </ul>
   );
 };
-const Movie = ({ movie }) => {
+const Movie = ({ movie, handleSelectMovie }) => {
   return (
-    <li>
+    <li onClick={() => handleSelectMovie(movie.imdbID)}>
       <img src={movie?.Poster} alt={`${movie?.Title} poster`} />
       <h3>{movie?.Title}</h3>
       <div>
@@ -197,13 +201,18 @@ const Movie = ({ movie }) => {
     </li>
   );
 };
+
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedId, setSelectedId] = useState("tt5057054");
   const tempQuery = "dil se";
+  const handleSelectMovie = (id, selectedId) => {
+    setSelectedId(id);
+  };
 
   const fetchMovies = async (query) => {
     try {
@@ -220,6 +229,7 @@ export default function App() {
       if (data.Response === "False")
         throw new Error(`no movies found for query ${query}`);
       setMovies(data.Search);
+      console.log(data.Search);
     } catch (error) {
       console.error(error.message);
       setError(error.message);
@@ -233,6 +243,7 @@ export default function App() {
   };
 
   useEffect(() => {
+    if (!query) return;
     fetchMovies(query);
     console.log(query);
   }, [query]);
@@ -248,24 +259,35 @@ export default function App() {
         <Box
           element=<>
             {isLoading && <Loader />}
-            {!isLoading && !error && <MoviesList movies={movies} />}
+            {!isLoading && !error && (
+              <MoviesList
+                movies={movies}
+                handleSelectMovie={handleSelectMovie}
+              />
+            )}
             {error && <ErrorMessage message={error} />}
           </>
         />
 
         <Box
           element={
-            <>
-              <WatchedSummary watched={watched} />
-              <WatchedMoviesList watched={watched} />
-            </>
+            selectedId ? (
+              <MovieDetails selectedId={selectedId} />
+            ) : (
+              <>
+                <WatchedSummary watched={watched} />
+                <WatchedMoviesList watched={watched} />
+              </>
+            )
           }
         />
       </Main>
     </>
   );
 }
-
+const MovieDetails = ({ selectedId }) => {
+  return <div className="details">{selectedId}</div>;
+};
 const Loader = () => {
   return <p className="loader">Loading...</p>;
 };
