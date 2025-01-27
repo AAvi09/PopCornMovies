@@ -213,6 +213,9 @@ export default function App() {
   const handleSelectMovie = (id, selectedId) => {
     setSelectedId(id);
   };
+  const handleCloseMovie = () => {
+    setSelectedId(null);
+  };
 
   const fetchMovies = async (query) => {
     try {
@@ -272,7 +275,10 @@ export default function App() {
         <Box
           element={
             selectedId ? (
-              <MovieDetails selectedId={selectedId} />
+              <MovieDetails
+                selectedId={selectedId}
+                handleCloseMovie={handleCloseMovie}
+              />
             ) : (
               <>
                 <WatchedSummary watched={watched} />
@@ -285,8 +291,15 @@ export default function App() {
     </>
   );
 }
-const MovieDetails = ({ selectedId }) => {
-  return <div className="details">{selectedId}</div>;
+const MovieDetails = ({ selectedId, handleCloseMovie }) => {
+  return (
+    <div className="details">
+      <button className="btn-back" onClick={handleCloseMovie}>
+        &larr;
+      </button>
+      {selectedId}
+    </div>
+  );
 };
 const Loader = () => {
   return <p className="loader">Loading...</p>;
