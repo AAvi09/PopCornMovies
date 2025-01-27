@@ -62,8 +62,7 @@ const Logo = () => {
     </div>
   );
 };
-const Search = () => {
-  const [query, setQuery] = useState("");
+const Search = ({ query, setQuery }) => {
   return (
     <input
       className="search"
@@ -77,7 +76,7 @@ const Search = () => {
 const NumResults = ({ movies }) => {
   return (
     <p className="num-results">
-      Found <strong>{movies.length}</strong> results
+      Found <strong>{movies?.length}</strong> results
     </p>
   );
 };
@@ -145,20 +144,20 @@ const WatchedMoviesList = ({ watched }) => {
 const WatchedMovie = ({ movie }) => {
   return (
     <li>
-      <img src={movie.Poster} alt={`${movie.Title} poster`} />
-      <h3>{movie.Title}</h3>
+      <img src={movie?.Poster} alt={`${movie?.Title} poster`} />
+      <h3>{movie?.Title}</h3>
       <div>
         <p>
           <span>⭐️</span>
-          <span>{movie.imdbRating}</span>
+          <span>{movie?.imdbRating}</span>
         </p>
         <p>
           <span>🌟</span>
-          <span>{movie.userRating}</span>
+          <span>{movie?.userRating}</span>
         </p>
         <p>
           <span>⏳</span>
-          <span>{movie.runtime} min</span>
+          <span>{movie?.runtime} min</span>
         </p>
       </div>
     </li>
@@ -187,26 +186,29 @@ const MoviesList = ({ movies }) => {
 const Movie = ({ movie }) => {
   return (
     <li>
-      <img src={movie.Poster} alt={`${movie.Title} poster`} />
-      <h3>{movie.Title}</h3>
+      <img src={movie?.Poster} alt={`${movie?.Title} poster`} />
+      <h3>{movie?.Title}</h3>
       <div>
         <p>
           <span>🗓</span>
-          <span>{movie.Year}</span>
+          <span>{movie?.Year}</span>
         </p>
       </div>
     </li>
   );
 };
 export default function App() {
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const query = "dil se";
+  const tempQuery = "dil se";
 
-  const fetchMovies = async () => {
+  const fetchMovies = async (query) => {
     try {
+      setIsLoading(true);
+      setError("");
       const response = await fetch(
         `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}`
       );
@@ -224,17 +226,22 @@ export default function App() {
     } finally {
       setIsLoading(false);
     }
+    if (query.length < 3) {
+      setMovies([]);
+      setError("");
+    }
   };
 
   useEffect(() => {
-    fetchMovies();
-  }, []);
+    fetchMovies(query);
+    console.log(query);
+  }, [query]);
 
   return (
     <>
       <NavBar>
         <Logo />
-        <Search />
+        <Search query={query} setQuery={setQuery} />
         <NumResults movies={movies} />
       </NavBar>
       <Main>
