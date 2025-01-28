@@ -16,6 +16,7 @@ const StarRating = ({
   color = "#fcc419",
   size = 48,
   messages = [],
+  onSetRating,
 }) => {
   const textStyle = {
     lineHeight: "1",
@@ -27,6 +28,7 @@ const StarRating = ({
   const [tempRating, setTempRating] = useState(0);
   const handleRating = (rating) => {
     setRating(rating);
+    onSetRating(rating);
   };
   return (
     <div style={containerStyle}>
