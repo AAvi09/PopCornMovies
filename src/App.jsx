@@ -371,6 +371,9 @@ const MovieDetails = ({
   };
   useEffect(() => {
     movieTitle();
+    return () => {
+      document.title = "usePopCorn🍿🎥📺";
+    };
   }, [title]);
   return (
     <div className="details">
