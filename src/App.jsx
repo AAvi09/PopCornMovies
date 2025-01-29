@@ -232,13 +232,14 @@ export default function App() {
   const handleDeleteWatchedMovie = (id) => {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   };
-
+  const controller = new AbortController();
   const fetchMovies = async (query) => {
     try {
       setIsLoading(true);
       setError("");
       const response = await fetch(
-        `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+        `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+        { signal: controller.signal }
       );
 
       if (!response.ok) {
@@ -248,10 +249,11 @@ export default function App() {
       if (data.Response === "False")
         throw new Error(`no movies found for query ${query}`);
       setMovies(data.Search);
+      setError("");
       console.log(data.Search);
     } catch (error) {
       console.error(error.message);
-      setError(error.message);
+      if (error.name !== "AbortError") setError(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -265,6 +267,7 @@ export default function App() {
     if (!query) return;
     fetchMovies(query);
     console.log(query);
+    return () => controller.abort();
   }, [query]);
 
   return (
